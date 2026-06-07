@@ -15,7 +15,7 @@ services:
       retries: 10
 
   app:
-    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.8
+    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.9
     ports:
       - "${PORT:-8000}:8000"
     env_file:

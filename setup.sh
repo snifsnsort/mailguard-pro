@@ -41,6 +41,21 @@ while true; do
   break
 done
 
+# Optional: One-Click OAuth (Microsoft 365). Requires the customer's own Azure app
+# AND the instance served over HTTPS (Azure rejects non-HTTPS redirect URIs).
+MAILGUARD_CLIENT_ID=""
+MAILGUARD_CLIENT_SECRET=""
+MAILGUARD_REDIRECT_URI=""
+echo
+read -r -p "Enable Microsoft 365 One-Click OAuth? Needs your own Azure app + HTTPS. [y/N] " enable_oauth
+case "$enable_oauth" in
+  y|Y)
+    read -r -p "  Azure Application (client) ID: " MAILGUARD_CLIENT_ID
+    read -r -s -p "  Client secret (hidden): " MAILGUARD_CLIENT_SECRET; echo
+    read -r -p "  Redirect URI (https://your-host/api/auth/callback): " MAILGUARD_REDIRECT_URI
+    ;;
+esac
+
 # Write a clean, complete .env. Values are already expanded into shell variables,
 # so special characters in the password/key are written literally and safely.
 cat > "$ENV_FILE" <<EOF
@@ -71,6 +86,11 @@ SEED_TENANT_DOMAIN=
 SEED_TENANT_ID=
 SEED_CLIENT_ID=
 SEED_CLIENT_SECRET=
+
+# One-Click OAuth (optional; needs your own Azure app + HTTPS)
+MAILGUARD_CLIENT_ID=${MAILGUARD_CLIENT_ID}
+MAILGUARD_CLIENT_SECRET=${MAILGUARD_CLIENT_SECRET}
+MAILGUARD_REDIRECT_URI=${MAILGUARD_REDIRECT_URI}
 
 # ── Optional integrations (add later from the web interface or here) ──────────
 ET_API_KEY=

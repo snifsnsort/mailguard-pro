@@ -47,7 +47,7 @@ MAILGUARD_CLIENT_ID=""
 MAILGUARD_CLIENT_SECRET=""
 MAILGUARD_REDIRECT_URI=""
 echo
-read -r -p "Enable Microsoft 365 One-Click OAuth? Needs your own Azure app + HTTPS. [y/N] " enable_oauth
+read -r -p "Pre-fill Microsoft 365 One-Click OAuth now? Most people skip this (connect in-app later). [y/N] " enable_oauth
 case "$enable_oauth" in
   y|Y)
     read -r -p "  Azure Application (client) ID: " MAILGUARD_CLIENT_ID

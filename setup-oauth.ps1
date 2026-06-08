@@ -44,6 +44,7 @@ foreach ($m in "Microsoft.Graph.Authentication", "Microsoft.Graph.Applications")
 
 Write-Host "[2/4] Sign in to Microsoft 365 if prompted..." -ForegroundColor Cyan
 Connect-MgGraph -Scopes "Application.ReadWrite.All", "Directory.Read.All" -NoWelcome
+$TenantId = (Get-MgContext).TenantId
 
 # Resolve the delegated Graph scopes the consent flow requests.
 $graphSp = Get-MgServicePrincipal -Filter "appId eq '$GraphAppId'"
@@ -85,6 +86,7 @@ $ClientSecret = $secret.SecretText
 
 Write-Host ""
 Write-Host "=====================  COPY THESE INTO MAILGUARD  =====================" -ForegroundColor Green
+Write-Host ("Tenant ID:      " + $TenantId)
 Write-Host ("Client ID:      " + $ClientId)
 Write-Host ("Client Secret:  " + $ClientSecret)
 Write-Host "=======================================================================" -ForegroundColor Green

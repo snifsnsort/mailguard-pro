@@ -117,6 +117,27 @@ and log in with the admin password you chose in Step 4.
 
 ---
 
+## Connecting Microsoft 365
+
+After you log in, open **Connect Microsoft 365** and follow the guided wizard. It walks
+you through running one PowerShell setup script in **Azure Cloud Shell**
+(`https://shell.azure.com`) that registers a read-only app, grants consent, and prints
+three values (Tenant ID, Client ID, Client Secret) to paste back into MailGuard. No Azure
+experience needed — the script installs everything it requires automatically.
+
+If you'd rather run the script directly instead of copying it from the wizard, it's also
+included here as `setup-m365.ps1`. In Azure Cloud Shell (PowerShell), upload or paste it
+and run:
+
+```powershell
+./setup-m365.ps1
+```
+
+The script only reads your tenant configuration — it never changes mail flow, users, or
+policies. The Exchange role it assigns can take up to 30 minutes to fully activate.
+
+---
+
 ## Updating to a new version
 
 ```bash

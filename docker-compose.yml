@@ -15,7 +15,7 @@ services:
       retries: 10
 
   app:
-    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.18
+    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.19
     ports:
       - "${PORT:-8000}:8000"
     env_file:
@@ -31,7 +31,7 @@ services:
   # Background worker: drains the job queue (scans, lookalike, v2 jobs).
   # Without this, scans stay "queued" forever and the dashboard shows "Scanning...".
   worker:
-    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.18
+    image: ghcr.io/snifsnsort/mailguard-pro:v2.0.19
     command: ["python", "worker.py"]
     env_file:
       - .env

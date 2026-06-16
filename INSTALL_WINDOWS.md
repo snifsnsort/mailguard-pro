@@ -190,8 +190,6 @@ Contact support to restore access.
 
 <div align="center">
 
-### Need a hand? We'll walk you through it.
 
-[![Email Support](https://img.shields.io/badge/✉️%20support@mailguard.io-0078D4?style=for-the-badge)](mailto:support@mailguard.io)
 
 </div>

@@ -10,6 +10,7 @@ When you finish, MailGuard runs in your browser at `http://YOUR-SERVER:8000`.
 ## Before you start
 
 - A Linux server (Ubuntu 22.04+ or Debian 12+), about 2 CPU / 4 GB RAM / 20 GB disk.
+- Powershell 7
 - A way to open a terminal on it (e.g. SSH).
 - Your **MailGuard Pro license key** (the long string we provided).
 - A **registry token** — only if we told you the software image is private.

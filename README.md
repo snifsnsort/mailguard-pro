@@ -179,6 +179,7 @@ Each client signs in with their own Microsoft or Google account and sees only th
 | Symptom | Fix |
 |---------|-----|
 | `denied` / `unauthorized` on `docker compose pull` | Your image is private — log in with the token we provided (see the install guide). |
+| `password authentication failed for user "mailguard"` | Leftover database volume from a previous install. Fresh install: `docker compose down -v` then `docker compose up -d`. Keeping data: restore your previous `.env` so `POSTGRES_PASSWORD` matches the volume. |
 | Port 8000 already in use | Set `PORT=8080` in `.env`, then `docker compose up -d` and use `:8080`. |
 | Can't reach it from another computer | Open the firewall port and use the server's IP, not `localhost`. |
 | "License has been revoked" | Contact support to restore access. |

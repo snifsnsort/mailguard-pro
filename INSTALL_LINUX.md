@@ -10,7 +10,6 @@ When you finish, MailGuard runs in your browser at `http://YOUR-SERVER:8000`.
 ## Before you start
 
 - A Linux server (Ubuntu 22.04+ or Debian 12+), about 2 CPU / 4 GB RAM / 20 GB disk.
-- Powershell 7
 - A way to open a terminal on it (e.g. SSH).
 - Your **MailGuard Pro license key** (the long string we provided).
 - A **registry token** — only if we told you the software image is private.
@@ -184,6 +183,35 @@ docker compose up -d
 
 Your data is preserved across updates.
 
+## Reinstalling (or moving the folder)
+
+The database lives in a Docker **volume**, not in the project folder — so renaming or
+deleting the `mailguard-pro` directory does **not** delete the database, and a fresh
+install will reuse the old volume. Because PostgreSQL locks in its password the first
+time that volume is created, a brand-new `.env` (with a new `POSTGRES_PASSWORD`) won't
+match the old volume, and the app fails with `password authentication failed`.
+
+So when reinstalling, pick one:
+
+- **Keep your data** — copy your previous `.env` into the new folder before starting,
+  so `POSTGRES_PASSWORD` still matches the existing volume:
+  ```bash
+  cp /path/to/old/mailguard-pro/.env ~/mailguard-pro/.env
+  docker compose up -d
+  ```
+- **Start clean** — remove the old database volume, then set up fresh:
+  ```bash
+  cd ~/mailguard-pro
+  docker compose down -v        # deletes the old database volume
+  bash setup.sh
+  docker compose up -d
+  ```
+
+> [!NOTE]
+> Re-running `bash setup.sh` in place is safe — it **preserves** your existing database
+> password and encryption key (and any integration keys), so it never breaks an
+> existing database or your stored credentials.
+
 ## Stopping and removing
 
 ```bash
@@ -202,6 +230,22 @@ docker compose logs app | grep -i license
 ```
 A `[startup] LICENSE ERROR: ...` line tells you why — usually the key is missing, expired,
 or was pasted incorrectly. Re-run `bash setup.sh` to re-enter it, then `docker compose up -d`.
+
+**`password authentication failed for user "mailguard"` in the logs**
+The database is rejecting the app's password. This happens after a **reinstall** or a
+changed `POSTGRES_PASSWORD` when an old PostgreSQL data volume is still present: Postgres
+keeps the password from when the volume was first created and ignores the new one.
+```bash
+docker compose logs app | grep -i "authentication failed"
+```
+- Fresh install with **no data to keep** — reset the database:
+  ```bash
+  docker compose down -v
+  docker compose up -d
+  ```
+- Need to **keep existing data** — restore the `.env` from your previous install so
+  `POSTGRES_PASSWORD` matches the volume, then `docker compose up -d`. Do **not** change
+  `POSTGRES_PASSWORD` on an existing database.
 
 **`denied` or `unauthorized` when you run `docker compose pull`**
 The image is private — complete Step 5 with the token we gave you, then retry.

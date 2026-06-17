@@ -12,7 +12,7 @@ When you finish, MailGuard runs in your browser at `http://YOUR-SERVER:8000`.
 - A Linux server (Ubuntu 22.04+ or Debian 12+), about 2 CPU / 4 GB RAM / 20 GB disk.
 - A way to open a terminal on it (e.g. SSH).
 - Your **MailGuard Pro license key** (the long string we provided).
-- A **registry token** — only if we told you the software image is private.
+- A **registry token** — provided with your license; required to download the software.
 
 ---
 
@@ -71,15 +71,17 @@ When prompted:
 
 That's the entire configuration — no files to edit by hand.
 
-## Step 5 — Log in to the software registry *(only if your image is private)*
+## Step 5 — Log in to the software registry
 
-Skip this unless we gave you a token.
+The MailGuard image is private, so you must sign in with the registry token we provided
+before downloading it.
 
 ```bash
 echo 'PASTE_YOUR_TOKEN_HERE' | docker login ghcr.io -u snifsnsort --password-stdin
 ```
 
-You should see `Login Succeeded`.
+You should see `Login Succeeded`. This login is saved, so you only do it once per server
+(it's also what lets future `docker compose pull` updates work).
 
 ## Step 6 — Start MailGuard
 
@@ -248,7 +250,7 @@ docker compose logs app | grep -i "authentication failed"
   `POSTGRES_PASSWORD` on an existing database.
 
 **`denied` or `unauthorized` when you run `docker compose pull`**
-The image is private — complete Step 5 with the token we gave you, then retry.
+You're not logged in to the registry — complete Step 5 with the token we gave you, then retry.
 
 **Port 8000 is already in use**
 Edit `.env`, uncomment and change `PORT=8080` (or any free port), then `docker compose up -d`

@@ -10,7 +10,7 @@ When you finish, MailGuard opens in your web browser at **<http://localhost:8000
 
 - A **Windows 10 or 11** PC (64-bit), with about **4 GB free memory** and **20 GB free disk**.
 - Your **MailGuard Pro license key** — the long string we emailed you.
-- A **registry token** — *only* if we told you your software image is private.
+- A **registry token** — provided with your license; required to download the software.
 - About **10 minutes**.
 
 > [!TIP]
@@ -74,15 +74,15 @@ When it says **"Done. .env created."** you're configured. There are no files to 
 
 ---
 
-## 5️⃣ Sign in to the software registry *(only if your image is private)*
+## 5️⃣ Sign in to the software registry
 
-**Skip this step** unless we gave you a token. If we did, paste this — replacing `PASTE_YOUR_TOKEN_HERE` with the token:
+The MailGuard image is private, so you must sign in once with the registry token we provided. Paste this — replacing `PASTE_YOUR_TOKEN_HERE` with your token:
 
 ```powershell
 echo PASTE_YOUR_TOKEN_HERE | docker login ghcr.io -u snifsnsort --password-stdin
 ```
 
-You should see **`Login Succeeded`**.
+You should see **`Login Succeeded`**. This login is saved, so you only do it once — it's also what lets future updates (`docker compose pull`) work.
 
 ---
 
@@ -178,7 +178,7 @@ docker compose logs app | Select-String -Pattern "license"
 If the key was mistyped or expired, re-run `powershell -ExecutionPolicy Bypass -File .\setup.ps1` to re-enter it, then `docker compose up -d`.
 
 **`denied` or `unauthorized` when you run `docker compose pull`**
-Your image is private — do Step 5 with the token we gave you, then retry.
+You're not signed in to the registry — do Step 5 with the token we gave you, then retry.
 
 **Port 8000 is already in use**
 Open `.env` in Notepad, find the line `# PORT=8000`, remove the `#`, change it to `PORT=8080`, save, then `docker compose up -d` and use **<http://localhost:8080>**.

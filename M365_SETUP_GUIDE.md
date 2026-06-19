@@ -4,9 +4,11 @@ This is a one-time, ~10-minute setup done by a **Microsoft 365 Global Administra
 It registers a **read-only** app so MailGuard can assess your email security posture.
 Nothing is changed in your tenant beyond granting read access.
 
-You run two small PowerShell scripts. You can download both from inside MailGuard
-(the **Connect Microsoft 365** screen has a **Download .ps1** button on each step), or
-use the copies provided with your install.
+There are two ways to connect, both read-only. **One-Click (recommended)** lets your
+admins connect just by signing in; **Manual** connects with three pasted values. Either
+way you run small PowerShell scripts — download them from inside MailGuard (the **Connect
+Microsoft 365** screen has a **Download .ps1** button on each step), or use the copies
+provided with your install.
 
 ---
 
@@ -30,6 +32,31 @@ You'll be asked to sign in using a **device code**: a short code and a URL appea
 window; open the URL in a browser, enter the code, and sign in as a Global Administrator.
 
 ---
+
+## One-Click (recommended)
+
+One-Click lets your admins connect by signing in — no connection string to copy.
+
+1. On the **Connect Microsoft 365** screen, choose **One-Click OAuth** and download
+   **`MailGuard-OAuth-Setup.ps1`** from Step 1.
+2. Run it (device-code sign-in as a Global Administrator). It registers the sign-in app,
+   creates a secret, and prints/saves your **Tenant ID**, **Client ID**, and **Client
+   Secret** to `mailguard-signin-credentials.txt`.
+3. Paste those three values into the wizard and **Save**, then click **Connect** and sign
+   in. MailGuard provisions the read-only permissions and assigns the Exchange role for you.
+4. **Only if Exchange stays "pending"** after ~30 minutes, run
+   **`MailGuard-OAuth-ExchangeRole.ps1`** from the same folder to assign the **View-Only
+   Organization Management** role to the sign-in app manually.
+
+> The **Client Secret is shown only once.** It's saved to `mailguard-signin-credentials.txt`
+> — **delete that file** once MailGuard shows the tenant connected.
+
+---
+
+## Manual setup
+
+The Manual path registers a separate read-only app (`MailGuard Scanner`) and connects with
+three pasted values. It uses two scripts.
 
 ## Step 1 — Register the app (`MailGuard-1-Setup.ps1`)
 

@@ -127,28 +127,27 @@ everything. You have two options — both easy:
 ### Option A — One-Click (recommended)
 
 1. In the wizard, choose **One-Click OAuth**.
-2. It shows you a setup script. Click **Copy**.
-3. Run the script (see *Where to run the script* below) and sign in as a Microsoft 365 **admin**.
-4. It prints three values: **Tenant ID**, **Client ID**, **Client Secret**.
-5. Paste them into the wizard and click **Save**. From then on, connecting is just signing in.
+2. On Step 1, click **Download .ps1** to save **`MailGuard-OAuth-Setup.ps1`**.
+3. Run it as a file (see *Where to run the script* below) and sign in as a Microsoft 365 **admin** with the device code it shows.
+4. It prints three values — **Tenant ID**, **Client ID**, **Client Secret** — and saves them to `mailguard-signin-credentials.txt`.
+5. Paste them into the wizard and click **Save**, then **Connect** and sign in. MailGuard assigns the Exchange role for you; only if it stays *pending* after ~30 min, run **`MailGuard-OAuth-ExchangeRole.ps1`** from the same folder.
 
 ### Option B — Manual
 
-Same idea: choose **Manual Setup**, run the script, and paste the same three values
-(Tenant ID, Client ID, Client Secret) into the three boxes.
+Choose **Manual Setup** and click **Download .ps1** for **`MailGuard-1-Setup.ps1`**. Run it
+as a file, then paste the three values (Tenant ID, Client ID, Client Secret) into the boxes.
+After the tenant connects, run **`MailGuard-2-ExchangeRole.ps1`** from the same folder to
+assign the Exchange role.
 
 ### Where to run the script
 
-The script works in **either** of these — pick whichever is easier:
+**Run each script as a file** — don't paste the lines one by one (that breaks the
+multi-line commands). Pick whichever machine is easiest; it installs what it needs and
+signs you in with a device code (no Azure subscription required):
 
-- 🪟 **Windows PowerShell on any PC** — open PowerShell, paste the script, press Enter.
-  **Needs no Azure subscription.** A Microsoft sign-in window appears; sign in as an admin.
-- ☁️ **Azure Cloud Shell** (`https://shell.azure.com`) — choose *PowerShell* if asked.
-
-> [!IMPORTANT]
-> Azure Cloud Shell requires an Azure **subscription**. If your Microsoft 365 tenant
-> doesn't have one, Cloud Shell won't open — just run the script in **Windows PowerShell**
-> instead. It works exactly the same, and the script installs everything it needs.
+- 🪟 **Windows** — right-click the file → **Run with PowerShell**.
+- 🍎 **Mac** — install PowerShell once (`brew install --cask powershell`), then `pwsh ./MailGuard-OAuth-Setup.ps1`.
+- 🐧 **Linux** — install PowerShell 7, then `pwsh ./MailGuard-OAuth-Setup.ps1`.
 
 > [!TIP]
 > **On a remote/headless server**, One-Click signs you in through `http://localhost:8000`.
@@ -157,17 +156,13 @@ The script works in **either** of these — pick whichever is easier:
 > locally and click **Connect**. **Manual Setup** has no such requirement — it's often
 > simpler on a remote server.
 
-A standalone copy of each script is also included in this folder if you prefer to run it
-directly: **`setup-oauth.ps1`** (One-Click) and **`setup-m365.ps1`** (Manual). For example:
-
-```powershell
-./setup-oauth.ps1
-```
+Standalone copies of all scripts are included in this folder if you prefer to run them
+directly: **`MailGuard-OAuth-Setup.ps1`** (One-Click) and **`MailGuard-1-Setup.ps1`** +
+**`MailGuard-2-ExchangeRole.ps1`** (Manual).
 
 > [!NOTE]
 > The scripts only **read** your tenant configuration — they never change mail flow,
-> users, or policies. The Exchange role they assign can take up to **30 minutes** to fully
-> activate.
+> users, or policies. The Exchange role can take up to **30 minutes** to fully activate.
 
 ### Connecting Google Workspace
 

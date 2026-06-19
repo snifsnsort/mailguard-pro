@@ -116,22 +116,18 @@ Log in with the **admin password** you chose in Step 4.
 
 After you log in, click **Connect → Microsoft 365** and the wizard guides you. You'll have two options — both are easy:
 
-- **One-Click (recommended):** the wizard shows you a setup script. Run it, sign in as a Microsoft 365 admin, and it prints three values (Tenant ID, Client ID, Client Secret). Paste them back in → done. After that, connecting is just signing in.
-- **Manual:** same script, you paste the same three values.
+- **One-Click (recommended):** download the setup script, run it, sign in as a Microsoft 365 admin, and it prints three values (Tenant ID, Client ID, Client Secret). Paste them back in → done. After that, connecting is just signing in.
+- **Manual:** download the setup script, run it, and paste the same three values.
 
-**Where do you run the script?** You're on Windows — the easiest place is **right here in PowerShell**, no Azure subscription required:
+**How do you run the script?** Download it from the wizard and **run it as a file** — don't paste the lines one by one (that breaks the multi-line commands). On Windows there's nothing to install:
 
-1. In the wizard, click **Copy** on the setup script.
-2. Open a new **PowerShell** window (Start Menu → type *PowerShell* → Enter).
-3. **Right-click to paste** the script and press **Enter**.
-4. A Microsoft sign-in window pops up — sign in as a Microsoft 365 **admin**.
-5. It prints **Tenant ID**, **Client ID**, and **Client Secret**. Copy those into the wizard.
-
-> [!NOTE]
-> The wizard also offers **Azure Cloud Shell** as an alternative. That requires an Azure *subscription*. If your tenant doesn't have one, just use Windows PowerShell as above — it works exactly the same.
+1. In the wizard, click **Download .ps1** to save the script (e.g. `MailGuard-OAuth-Setup.ps1`).
+2. In File Explorer, **right-click the file → Run with PowerShell**.
+3. A code and URL appear — open the URL, enter the code, and sign in as a Microsoft 365 **admin**.
+4. It prints **Tenant ID**, **Client ID**, and **Client Secret** (and saves them next to the script). Copy those into the wizard.
 
 > [!IMPORTANT]
-> The script only **reads** your tenant configuration — it never changes mail flow, users, or policies. One Exchange permission it sets can take up to **30 minutes** to fully activate.
+> The script only **reads** your tenant configuration — it never changes mail flow, users, or policies. For One-Click, MailGuard assigns the Exchange role for you; if it stays *pending* after ~30 minutes, run `MailGuard-OAuth-ExchangeRole.ps1` from the same folder.
 
 For **Google Workspace**, click **Connect → Google Workspace** and follow that wizard instead.
 

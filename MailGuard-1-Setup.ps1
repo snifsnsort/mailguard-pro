@@ -34,19 +34,25 @@ Write-Host '=========================================================='
 
 # 1. Modules for BOTH steps -------------------------------------------------
 Write-Host ''
-Write-Host '[1/5] Checking required PowerShell modules...' -ForegroundColor Cyan
+Write-Host '[1/5] Installing the components MailGuard needs (first run only)...' -ForegroundColor Cyan
+$ProgressPreference = 'SilentlyContinue'
+try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
+  Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force -ErrorAction SilentlyContinue | Out-Null
+}
+if ((Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue).InstallationPolicy -ne 'Trusted') {
+  try { Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue } catch {}
+}
 foreach ($m in 'Microsoft.Graph.Authentication','Microsoft.Graph.Applications','ExchangeOnlineManagement') {
-  if (Get-Module -ListAvailable -Name $m) {
-    Write-Host "      $m - already installed"
-  } else {
-    Write-Host "      $m - installing..."
-    try {
-      Install-Module $m -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
-    } catch {
-      Fail "Could not install '$m'. Close all other PowerShell windows, open a fresh one, and run this script again. ($($_.Exception.Message))"
-    }
+  if (Get-Module -ListAvailable -Name $m) { continue }
+  Write-Host "      adding $m..." -ForegroundColor DarkGray
+  try {
+    Install-Module $m -Scope CurrentUser -Force -AllowClobber -Repository PSGallery -ErrorAction Stop | Out-Null
+  } catch {
+    Fail "Could not install '$m'. Close all other PowerShell windows, open a fresh one, and run this script again. ($($_.Exception.Message))"
   }
 }
+Write-Host '      all components ready.' -ForegroundColor DarkGray
 
 # 2. Sign in (device code: no broker, cross-platform) -----------------------
 Write-Host ''

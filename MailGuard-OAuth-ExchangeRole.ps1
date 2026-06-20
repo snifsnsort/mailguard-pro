@@ -27,7 +27,17 @@ function Fail($msg) { Write-Host ''; Write-Host "ERROR: $msg"   -ForegroundColor
 
 # 1. Verify the module exists (MailGuard-OAuth-Setup.ps1 installs it) --------
 if (-not (Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
-  Fail "ExchangeOnlineManagement module not found. Run MailGuard-OAuth-Setup.ps1 first, then re-run this script."
+  Write-Host 'Installing the Exchange component (first run only)...' -ForegroundColor Cyan
+  $ProgressPreference = 'SilentlyContinue'
+  try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+  if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force -ErrorAction SilentlyContinue | Out-Null
+  }
+  if ((Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue).InstallationPolicy -ne 'Trusted') {
+    try { Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue } catch {}
+  }
+  try { Install-Module ExchangeOnlineManagement -Scope CurrentUser -Force -AllowClobber -Repository PSGallery -ErrorAction Stop | Out-Null }
+  catch { Fail "Could not install the Exchange module. ($($_.Exception.Message))" }
 }
 
 # 2. Get the Client ID + service-principal Object ID ------------------------
